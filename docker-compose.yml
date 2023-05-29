@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  train:
+    build:
+      context: model-train
+      dockerfile: Dockerfile.train
+    volumes:
+      - ./model:/workspace/model
+      - ./data:/workspace/data
+    restart: on-failure
+
+  evaluate:
+    build:
+      context: model-eval
+      dockerfile: Dockerfile.eval
+    volumes:
+      - ./model:/workspace/model
+      - ./data:/workspace/data
+    restart: on-failure
+
+  server:
+    build:
+      context: model-deploy
+      dockerfile: Dockerfile.serve
+    volumes:
+      - ./model:/app/model
+    ports:
+      - "8000:80"
+    restart: unless-stopped
+
+  infer:
+    build:
+      context: model-inference
+      dockerfile: Dockerfile.infer
+    volumes:
+      - ./data:/workspace/data
+      - ./requests:/workspace/requests
+    network_mode: "host"
+    restart: no

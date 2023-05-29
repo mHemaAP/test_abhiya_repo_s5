@@ -1,0 +1,6 @@
+FROM zironycho/pytorch:1120-cpu-py38
+
+WORKDIR /workspace
+COPY infer.py /workspace/
+
+CMD ["python", "infer.py"]
