@@ -2,12 +2,18 @@ version: '3.8'
 
 services:
   server:
-    image: mnist-fastapi-compose-infer
+    image: mnist-fastapi-compose-server
     volumes:
       - ../model:/app/model
     ports:
       - "8000:80"
+    networks:
+      - app
     deploy:
       replicas: 4
       restart_policy:
-        condition: any
+        condition: on-failure
+
+networks:
+  app:
+    driver: overlay
