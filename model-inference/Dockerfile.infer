@@ -1,4 +1,6 @@
-FROM zironycho/pytorch:1120-cpu-py38
+FROM satyajitghana/pytorch:2.3.1
+
+RUN pip install requests
 
 WORKDIR /workspace
 COPY infer.py /workspace/
