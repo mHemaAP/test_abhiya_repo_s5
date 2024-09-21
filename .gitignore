@@ -1,0 +1,17 @@
+data
+*.zip
+mnist/MNIST/raw/t10k-images-idx3-ubyte
+.gitignore
+mnist/MNIST/raw/t10k-images-idx3-ubyte.gz
+.gitignore
+mnist/MNIST/raw/t10k-labels-idx1-ubyte
+.gitignore
+mnist/MNIST/raw/t10k-labels-idx1-ubyte.gz
+.gitignore
+mnist/MNIST/raw/train-images-idx3-ubyte
+.gitignore
+mnist/MNIST/raw/train-images-idx3-ubyte.gz
+.gitignore
+mnist/MNIST/raw/train-labels-idx1-ubyte
+.gitignore
+mnist/MNIST/raw/train-labels-idx1-ubyte.gz
