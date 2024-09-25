@@ -5,14 +5,14 @@ FROM python:3.9-slim
 WORKDIR /app
 
 
-# # Copy all Python files
-# COPY model.py train.py eval.py infer.py  /app/
+# Copy all Python files
+COPY model.py train.py eval.py infer.py  /app/
 
-# Copy project files
-COPY model/ /app/model/
-COPY train/ /app/train/
-COPY eval/ /app/eval/
-COPY infer/ /app/infer/
+# # Copy project files
+# COPY model/ /app/model/
+# COPY train/ /app/train/
+# COPY eval/ /app/eval/
+# COPY infer/ /app/infer/
 
 # Copy requirements file and install dependencies
 COPY requirements.txt .
