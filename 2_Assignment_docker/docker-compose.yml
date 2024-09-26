@@ -46,3 +46,42 @@ services:
 volumes:
     # create volumes here
       mnist:
+
+
+
+# ===============================================================================
+# version: '3.8'
+
+# services:
+#   train:
+#     # Train service
+#     build:
+#       context: .
+#       dockerfile: Dockerfile.train
+#     volumes:
+#       - mnist:/opt/mount
+#       - ./model:/opt/mount/model
+#       - ./data:/opt/mount/data
+
+#   evaluate:
+#     # Evaluate service
+#     build:
+#       context: .
+#       dockerfile: Dockerfile.eval
+#     volumes:
+#       - mnist:/opt/mount
+#       - ./model:/opt/mount/model
+#       - ./data:/opt/mount/data
+
+#   infer:
+#     # Inference service
+#     build:
+#       context: .
+#       dockerfile: Dockerfile.infer
+#     volumes:
+#       - mnist:/opt/mount
+#       - ./data:/opt/mount/data
+#       - ./results:/opt/mount/results
+
+# volumes:
+#   mnist:
