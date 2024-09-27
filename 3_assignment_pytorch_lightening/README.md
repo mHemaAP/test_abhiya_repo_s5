@@ -12,22 +12,8 @@ Dataset
 This project uses the Dogs Breed Classification dataset available on Kaggle. 
 The dataset contains images of various dog breeds, which are used to train a classification model.
 
+[Image 1](C:\Users\a1gupt\OneDrive - CIGNA\Desktop\folder_structure.png) 
 
-├── checkpoints/
-├── data/
-│   └── dogs_breed_classification/
-├── data_module/
-│   ├── dogs_datamodule.py
-│   └── __init__.py
-├── docker-compose.yml
-├── Dockerfile
-├── logs/
-├── model/
-│   ├── dogs_classifier.py
-│   └── __init__.py
-├── requirements.txt
-├── utils/
-│   ├── eval.py
-│   ├── infer.py
-│   └── train.py
-└── README.md
+
+
+
