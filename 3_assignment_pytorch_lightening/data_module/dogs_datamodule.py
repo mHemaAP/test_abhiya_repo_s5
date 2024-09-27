@@ -18,32 +18,40 @@ class DogsDataModule(pl.LightningDataModule):
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
-        # self.dataset_url = "https://github.com/abhiyagupta/Datasets/raw/main/CNN_Dataset/dogs_classifier_dataset.zip"
-        self.dataset_url = "https://raw.githubusercontent.com/abhiyagupta/Datasets/main/dogs_classifier_dataset.zip"
-        self.dataset_zip_path = os.path.join(self.data_dir, 'dogs_classifier_dataset.zip') 
+        self.dataset_url = "https://github.com/abhiyagupta/Datasets/raw/main/CNN_Datasets/dogs_classifier_dataset.zip"
+        self.dataset_zip_path = os.path.join(self.data_dir, 'dogs_classifier_dataset.zip')
 
     def prepare_data(self):
-        # Check if the dataset is already downloaded
         if not os.path.exists(os.path.join(self.data_dir, 'dogs_classifier_dataset')):
             self.download_and_extract_dataset()
 
     def download_and_extract_dataset(self):
-        # Create the data directory if it doesn't exist
         Path(self.data_dir).mkdir(parents=True, exist_ok=True)
 
-        # Download the dataset if it doesn't exist
         if not os.path.exists(self.dataset_zip_path):
             print(f"Downloading dataset from {self.dataset_url}...")
-            response = requests.get(self.dataset_url)
-            with open(self.dataset_zip_path, 'wb') as f:
-                f.write(response.content)
-            print("Download complete!")
+            try:
+                response = requests.get(self.dataset_url)
+                response.raise_for_status()  # Raises an HTTPError for bad responses
+                with open(self.dataset_zip_path, 'wb') as f:
+                    f.write(response.content)
+                print("Download complete!")
+            except requests.exceptions.RequestException as e:
+                print(f"Error downloading the dataset: {e}")
+                return
 
-        # Extract the dataset
         print("Extracting dataset...")
-        with zipfile.ZipFile(self.dataset_zip_path, 'r') as zip_ref:
-            zip_ref.extractall(self.data_dir)
-        print("Extraction complete!")
+        try:
+            with zipfile.ZipFile(self.dataset_zip_path, 'r') as zip_ref:
+                zip_ref.extractall(self.data_dir)
+            print("Extraction complete!")
+        except zipfile.BadZipFile:
+            print("Error: The downloaded file is not a valid zip file.")
+            # Optionally, delete the invalid zip file
+            os.remove(self.dataset_zip_path)
+        except Exception as e:
+            print(f"Error extracting the dataset: {e}")
+
 
     def setup(self, stage: Optional[str] = None):
         # Ensure the dataset is ready
