@@ -1,23 +1,43 @@
 version: '3'
+
 services:
+  base:
+    build: .
+    volumes:
+      - .:/app
+      - ./data:/app/data
+      - ./data_modules:/app/data_modules
+      - ./logs:/app/logs
+      - ./checkpoints:/app/checkpoints
+    environment:
+      - PYTHONUNBUFFERED=1
+
   train:
-    build:
-      context: .
-    command: python train/train.py
-    volumes:
-      - ./data:/data
-      - ./model:/app/model
+    extends:
+      service: base
+    command: python utils/train.py  # This will run the train.py script
+
   eval:
-    build:
-      context: .
-    command: python eval/eval.py
-    volumes:
-      - ./data:/data
-      - ./model:/app/model
+    extends:
+      service: base
+    command: python utils/eval.py
+
   infer:
-    build:
-      context: .
-    command: python infer/infer.py
+    extends:
+      service: base
+    command: python utils/infer.py
+
+  tensorboard:
+    image: tensorflow/tensorflow:latest
     volumes:
-      - ./data:/data
-      - ./model:/app/model
+      - ./logs:/logs
+    ports:
+      - "6006:6006"
+    command: tensorboard --logdir /logs --host 0.0.0.0
+
+  jupyter:
+    extends:
+      service: base
+    ports:
+      - "8888:8888"
+    command: jupyter notebook --ip 0.0.0.0 --no-browser --allow-root
