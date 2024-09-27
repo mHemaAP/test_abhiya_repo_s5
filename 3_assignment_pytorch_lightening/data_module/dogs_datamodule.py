@@ -19,8 +19,8 @@ class DogsDataModule(pl.LightningDataModule):
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
         # self.dataset_url = "https://github.com/abhiyagupta/Datasets/raw/main/CNN_Dataset/dogs_classifier_dataset.zip"
-        elf.dataset_url="httpss://raw.githubusercontent.com/abhiyagupta/Datasets/refs/heads/main/CNN_Datasets"
-        self.dataset_zip_path = os.path.join(self.data_dir, 'dogs_classifier_dataset.zip')
+        self.dataset_url = "https://raw.githubusercontent.com/abhiyagupta/Datasets/main/dogs_classifier_dataset.zip"
+        self.dataset_zip_path = os.path.join(self.data_dir, 'dogs_classifier_dataset.zip') 
 
     def prepare_data(self):
         # Check if the dataset is already downloaded
