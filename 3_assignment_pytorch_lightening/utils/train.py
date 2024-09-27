@@ -1,8 +1,11 @@
+import sys
+sys.path.append('/app')
+
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint, RichProgressBar
-from data_modules.dogs_datamodule import DogsDataModule
-from models.dogs_classifier import DogsClassifier
+from data_module.dogs_datamodule import DogsDataModule
+from model.dogs_classifier import DogsClassifier
 
 def main():
     # Create data module

@@ -5,17 +5,14 @@ services:
     build: .
     volumes:
       - .:/app
-      - ./data:/app/data
-      - ./data_modules:/app/data_modules
-      - ./logs:/app/logs
-      - ./checkpoints:/app/checkpoints
     environment:
-      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app
+    working_dir: /app
 
   train:
     extends:
       service: base
-    command: python utils/train.py  # This will run the train.py script
+    command: python utils/train.py
 
   eval:
     extends:
