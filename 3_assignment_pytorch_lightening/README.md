@@ -12,8 +12,6 @@ Dataset
 This project uses the Dogs Breed Classification dataset available on Kaggle. 
 The dataset contains images of various dog breeds, which are used to train a classification model.
 
-[Image 1](C:\Users\a1gupt\OneDrive - CIGNA\Desktop\folder_structure.png) 
-
 
 
 
