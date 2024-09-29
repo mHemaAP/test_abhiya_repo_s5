@@ -44,3 +44,4 @@ class DogsClassifier(pl.LightningModule):
         return torch.optim.Adam(self.parameters(), lr=self.hparams.learning_rate)
 
         
+        
