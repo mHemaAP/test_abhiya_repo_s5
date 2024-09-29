@@ -19,6 +19,6 @@ Note: tried usuing uv, but in gitpod was running out of space. so shidted to pip
 
 
 
-ADDING IPYNB NOTEBOOK FOR BREAKDOWN AND CHEECKING DATA LOAD , DATA EXTRACT 
+
 
 
