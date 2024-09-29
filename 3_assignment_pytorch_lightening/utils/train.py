@@ -6,6 +6,8 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint, RichProgressBar
 from data_module.dogs_datamodule import DogsDataModule
 from model.dogs_classifier import DogsClassifier
+from data_module.dogs_datamodule import DogsDataModule
+
 
 def main():
     # Create data module
@@ -38,3 +40,18 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    
+#     # Create trainer
+#     trainer = pl.Trainer(
+#         max_epochs=1,
+#         logger=logger,
+#         callbacks=[checkpoint_callback, RichProgressBar()],
+#         accelerator='auto',
+#     )
+    
+#     # Train the model
+#     trainer.fit(model, data_module)
+
+# if __name__ == "__main__":
+#     main()
