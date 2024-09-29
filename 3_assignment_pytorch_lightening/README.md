@@ -12,6 +12,8 @@ Dataset
 This project uses the Dogs Breed Classification dataset available on Kaggle. 
 The dataset contains images of various dog breeds, which are used to train a classification model.
 
+Note: tried usuing uv, but in gitpod was running out of space. so shidted to pip install in requirements.txt 
+
 ADDING IPYNB NOTEBOOK FOR BREAKDOWN AND CHEECKING DATA LOAD , DATA EXTRACT 
 
 
