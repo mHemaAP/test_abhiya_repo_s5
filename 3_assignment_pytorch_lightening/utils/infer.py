@@ -1,11 +1,11 @@
 import torch
 from PIL import Image
 from torchvision import transforms
-from models.dogs_classifier import DogsClassifier
+from model.dogs_classifier import DogsClassifier
 
 def main():
     # Load the best model using the last checkpoint
-    model = DogsClassifier.load_from_checkpoint("checkpoints/best_model.ckpt")
+    model = DogsClassifier.load_from_checkpoint("checkpoints/dogs_classifier-epoch=XX-val_loss=XX.ckpt")
     model.eval()
     
     # Prepare image transform
@@ -29,5 +29,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-    
