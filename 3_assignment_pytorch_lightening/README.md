@@ -14,6 +14,11 @@ The dataset contains images of various dog breeds, which are used to train a cla
 
 Note: tried usuing uv, but in gitpod was running out of space. so shidted to pip install in requirements.txt 
 
+![image](https://github.com/user-attachments/assets/beb7f832-48bc-4e37-b9c3-6dcb0967b7b4) 
+
+
+
+
 ADDING IPYNB NOTEBOOK FOR BREAKDOWN AND CHEECKING DATA LOAD , DATA EXTRACT 
 
 
