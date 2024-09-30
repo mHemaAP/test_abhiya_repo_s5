@@ -16,8 +16,12 @@ def main():
     data_module.prepare_data()
     data_module.setup()
 
+    # Get the number of classes
+    num_classes = data_module.get_num_classes()
+    print(f"Number of classes in the dataset: {num_classes}")
+
     # Create model
-    model = DogsClassifier(num_classes=120, learning_rate=1e-3)
+    model = DogsClassifier(num_classes=num_classes, learning_rate=1e-3)
     
     # Setup logging
     logger = TensorBoardLogger("logs", name="dogs_classifier")
