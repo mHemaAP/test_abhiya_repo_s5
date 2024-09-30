@@ -40,6 +40,9 @@ class DogsDataModule(pl.LightningDataModule):
         print("Setting up data...")
         dataset_df = self.create_dataframe()
         print(f"Total images found: {len(dataset_df)}")
+
+        self.num_classes = dataset_df['label'].nunique()
+        print(f"Number of unique classes: {self.num_classes}")
         
         train_df, temp_df = self.split_train_temp(dataset_df)
         val_df, test_df = self.split_val_test(temp_df)
@@ -54,12 +57,21 @@ class DogsDataModule(pl.LightningDataModule):
         self.test_dataset = self.create_dataset(test_df)
 
     def create_dataframe(self):
-        TRAIN_PATH = self._dl_path.joinpath("dataset")
-        IMAGE_PATH_LIST = list(TRAIN_PATH.glob("*/*.jpg"))
-        images_path = [str(img_path) for img_path in IMAGE_PATH_LIST]
-        labels = [img_path.parent.stem for img_path in IMAGE_PATH_LIST]
+        DATASET_PATH = self._dl_path.joinpath("dataset")
+        print(f"Looking for images in: {DATASET_PATH}")
+        IMAGE_PATH_LIST = list(DATASET_PATH.glob("*/*.jpg"))
+        print(f"Number of images found: {len(IMAGE_PATH_LIST)}")
+        images_path = [str(img_path.relative_to(DATASET_PATH)) for img_path in IMAGE_PATH_LIST]
+        labels = [img_path.parent.name for img_path in IMAGE_PATH_LIST]
         
-        return pd.DataFrame({'image_path': images_path, 'label': labels})
+        df = pd.DataFrame({'image_path': images_path, 'label': labels})
+        print(f"Number of unique labels: {df['label'].nunique()}")
+        return df
+
+    def get_num_classes(self):
+        if self.num_classes is None:
+            raise ValueError("Number of classes is not set. Make sure setup() method is called.")
+        return self.num_classes
 
     def split_train_temp(self, df):
         train_split_idx, temp_split_idx, _, _ = (
