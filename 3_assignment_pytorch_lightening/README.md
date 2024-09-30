@@ -16,6 +16,11 @@ Note: tried usuing uv, but in gitpod was running out of space. so shidted to pip
 
 ![image](https://github.com/user-attachments/assets/beb7f832-48bc-4e37-b9c3-6dcb0967b7b4) 
 
+![image](https://github.com/user-attachments/assets/3662bbbb-8f91-4284-b8dc-63eda08707e3) 
+
+
+
+
 
 
 
