@@ -21,6 +21,7 @@ class DogsDataModule(pl.LightningDataModule):
         self.train_dataset = None
         self.val_dataset = None
         self.test_dataset = None
+        self.num_classes = None
 
     def prepare_data(self):
         """Download images and prepare datasets."""
