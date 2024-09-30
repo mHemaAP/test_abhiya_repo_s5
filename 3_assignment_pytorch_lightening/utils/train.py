@@ -11,6 +11,10 @@ from model.dogs_classifier import DogsClassifier
 def main():
     # Create data module
     data_module = DogsDataModule(dl_path='./data', batch_size=32)
+    
+    # Explicitly call prepare_data and setup
+    data_module.prepare_data()
+    data_module.setup()
 
     # Create model
     model = DogsClassifier(num_classes=120, learning_rate=1e-3)
