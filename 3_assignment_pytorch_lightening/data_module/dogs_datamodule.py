@@ -13,10 +13,11 @@ from sklearn.model_selection import train_test_split
 from PIL import Image
 
 class DogsDataModule(pl.LightningDataModule):
-    def __init__(self, dl_path: str = "data", batch_size: int = 32):
+    def __init__(self, dl_path: str = "data", batch_size: int = 32,num_workers: int = 1):
         super().__init__()
         self._dl_path = Path(dl_path)
         self._batch_size = batch_size
+        self._num_workers = num_workers
         self.train_dataset = None
         self.val_dataset = None
         self.test_dataset = None
@@ -24,6 +25,7 @@ class DogsDataModule(pl.LightningDataModule):
     def prepare_data(self):
         """Download images and prepare datasets."""
         dataset_dir = self._dl_path.joinpath("dataset")
+        print(f"Checking for dataset in: {dataset_dir}")
         
         # Check if the dataset already exists
         if not dataset_dir.exists():
@@ -35,9 +37,17 @@ class DogsDataModule(pl.LightningDataModule):
 
     def setup(self, stage: Optional[str] = None):
         """Load data and split into train, val, test sets."""
+        print("Setting up data...")
         dataset_df = self.create_dataframe()
+        print(f"Total images found: {len(dataset_df)}")
+        
         train_df, temp_df = self.split_train_temp(dataset_df)
         val_df, test_df = self.split_val_test(temp_df)
+
+        print(f"Train set size: {len(train_df)}")
+        print(f"Validation set size: {len(val_df)}")
+        print(f"Test set size: {len(test_df)}")
+        
 
         self.train_dataset = self.create_dataset(train_df)
         self.val_dataset = self.create_dataset(val_df)
