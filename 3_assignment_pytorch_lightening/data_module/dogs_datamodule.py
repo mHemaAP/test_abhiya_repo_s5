@@ -1,145 +1,123 @@
- 
 import os
 import zipfile
 from pathlib import Path
+import matplotlib.pyplot as plt
 from typing import Optional, Union
 import pytorch_lightning as pl
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
 from torchvision.datasets.utils import download_and_extract_archive
-
-
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from PIL import Image
 
 class DogsDataModule(pl.LightningDataModule):
-    def __init__(self, dl_path: Union[str, Path] = "data", num_workers: int = 0, batch_size: int = 8):
+    def __init__(self, dl_path: str = "data", batch_size: int = 32):
         super().__init__()
-        self._dl_path = dl_path
-        self._num_workers = num_workers
+        self._dl_path = Path(dl_path)
         self._batch_size = batch_size
+        self.train_dataset = None
+        self.val_dataset = None
+        self.test_dataset = None
 
     def prepare_data(self):
-        """Download images and prepare images datasets."""
-        download_and_extract_archive(
-            url="https://raw.githubusercontent.com/abhiyagupta/Datasets/refs/heads/main/CNN_Datasets/dogs_classifier_dataset.zip",
-            download_root=self._dl_path,
-            remove_finished=True
+        """Download images and prepare datasets."""
+        dataset_dir = self._dl_path.joinpath("dataset")
+        
+        # Check if the dataset already exists
+        if not dataset_dir.exists():
+            download_and_extract_archive(
+                url="https://raw.githubusercontent.com/abhiyagupta/Datasets/refs/heads/main/CNN_Datasets/dogs_classifier_dataset.zip",
+                download_root=self._dl_path,
+                remove_finished=True
+            )
+
+    def setup(self, stage: Optional[str] = None):
+        """Load data and split into train, val, test sets."""
+        dataset_df = self.create_dataframe()
+        train_df, temp_df = self.split_train_temp(dataset_df)
+        val_df, test_df = self.split_val_test(temp_df)
+
+        self.train_dataset = self.create_dataset(train_df)
+        self.val_dataset = self.create_dataset(val_df)
+        self.test_dataset = self.create_dataset(test_df)
+
+    def create_dataframe(self):
+        TRAIN_PATH = self._dl_path.joinpath("dataset")
+        IMAGE_PATH_LIST = list(TRAIN_PATH.glob("*/*.jpg"))
+        images_path = [str(img_path) for img_path in IMAGE_PATH_LIST]
+        labels = [img_path.parent.stem for img_path in IMAGE_PATH_LIST]
+        
+        return pd.DataFrame({'image_path': images_path, 'label': labels})
+
+    def split_train_temp(self, df):
+        train_split_idx, temp_split_idx, _, _ = (
+            train_test_split(
+                df.index, 
+                df.label, 
+                test_size=0.30,
+                stratify=df.label,
+                random_state=42
+            )
+        ) 
+        return df.iloc[train_split_idx].reset_index(drop=True), df.iloc[temp_split_idx].reset_index(drop=True)
+
+    def split_val_test(self, df):
+        val_split_idx, test_split_idx, _, _ = (
+            train_test_split(
+                df.index, 
+                df.label, 
+                test_size=0.5,
+                stratify=df.label,
+                random_state=42
+            )
+        )
+        return df.iloc[val_split_idx].reset_index(drop=True), df.iloc[test_split_idx].reset_index(drop=True)
+
+    def create_dataset(self, df):
+        transform = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        ])
+        return CustomImageDataset(
+            root=str(self._dl_path.joinpath("dataset")),
+            image_paths=df['image_path'],
+            transform=transform
         )
 
-    @property
-    def data_path(self):
-        return Path(self._dl_path).joinpath("dogs_classifier_dataset")
-
-    @property
-    def normalize_transform(self):
-        return transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-
-    @property
-    def train_transform(self):
-        return transforms.Compose([
-            transforms.Resize((224, 224)),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            self.normalize_transform,
-        ])
-
-    @property
-    def valid_transform(self):
-        return transforms.Compose([
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(),
-            self.normalize_transform
-        ])
-
-    def create_dataset(self, root, transform):
-        return ImageFolder(root=root, transform=transform)
-
-    def __dataloader(self, train: bool):
-        """Train/validation/test loaders."""
-        if train:
-            dataset = self.create_dataset(self.data_path.joinpath("train"), self.train_transform)
-        else:
-            dataset = self.create_dataset(self.data_path.joinpath("validation"), self.valid_transform)
-        return DataLoader(dataset=dataset, batch_size=self._batch_size, num_workers=self._num_workers, shuffle=train)
-
     def train_dataloader(self):
-        return self.__dataloader(train=True)
+        return DataLoader(self.train_dataset, batch_size=self._batch_size, num_workers=self._num_workers, shuffle=True)
 
     def val_dataloader(self):
-        return self.__dataloader(train=False)
+        return DataLoader(self.val_dataset, batch_size=self._batch_size, num_workers=self._num_workers, shuffle=False)
 
     def test_dataloader(self):
-        return self.__dataloader(train=False)  # Using validation dataset for testing
+        return DataLoader(self.test_dataset, batch_size=self._batch_size, num_workers=self._num_workers, shuffle=False)
 
 
+class CustomImageDataset(Dataset):  # Change this line
+    def __init__(self, root, image_paths, transform=None):
+        self.root = root
+        self.image_paths = image_paths
+        self.transform = transform
+        self.images = []
+        self.labels = []
 
+        for idx, path in enumerate(image_paths):
+            img = Image.open(os.path.join(root, path))
+            self.images.append(img)
+            self.labels.append(idx)  # Assuming labels are indices
 
+    def __len__(self):
+        return len(self.images)
 
+    def __getitem__(self, index):
+        img = self.images[index]
+        label = self.labels[index]
 
-# =================================
+        if self.transform:
+            img = self.transform(img)
 
-# class DogsDataModule(pl.LightningDataModule):
-#     def __init__(self, dl_path: Union[str, Path] = "data", num_workers: int = 0, batch_size: int = 8):
-#         super().__init__()
-#         self._dl_path = dl_path
-#         self._num_workers = num_workers
-#         self._batch_size = batch_size
-
-#     def prepare_data(self):
-#         """Download images and prepare images datasets."""
-#         download_and_extract_archive(
-#             url="https://github.com/abhiyagupta/Datasets/raw/main/CNN_Datasets/dogs_classifier_dataset.zip",
-#             download_root=self._dl_path,
-#             remove_finished=True
-#         )
-        
-#         # Extract dataset into separate directories for training and validation
-#         os.makedirs(os.path.join(self._dl_path, "train"), exist_ok=True)
-#         os.makedirs(os.path.join(self._dl_path, "validation"), exist_ok=True)
-        
-#         # Move images to train directory
-#         for file in os.listdir(os.path.join(self._dl_path, "dogs_classifier_dataset")):
-#             if file.endswith('.jpg') or file.endswith('.png'):
-#                 os.rename(os.path.join(self._dl_path, "dogs_classifier_dataset", file),
-#                           os.path.join(self._dl_path, "train", file))
-
-#     def data_path(self):
-#         return Path(self._dl_path)
-
-#     def normalize_transform(self):
-#         return transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-
-#     def train_transform(self):
-#         return transforms.Compose([
-#             transforms.Resize((224, 224)),
-#             transforms.RandomHorizontalFlip(),
-#             transforms.ToTensor(),
-#             self.normalize_transform(),
-#         ])
-
-#     def valid_transform(self):
-#         return transforms.Compose([
-#             transforms.Resize((224, 224)),
-#             transforms.ToTensor(),
-#             self.normalize_transform()
-#         ])
-
-#     def create_dataset(self, data_dir, transform):
-#         return ImageFolder(root=data_dir, transform=transform)
-
-#     def __dataloader(self, train: bool):
-#         """Train/validation loaders."""
-#         if train:
-#             dataset = self.create_dataset(self.data_path().joinpath("train"), self.train_transform())
-#         else:
-#             dataset = self.create_dataset(self.data_path().joinpath("validation"), self.valid_transform())
-#         return DataLoader(dataset=dataset, batch_size=self._batch_size, num_workers=self._num_workers, shuffle=train)
-
-#     def train_dataloader(self):
-#         return self.__dataloader(train=True)
-
-#     def val_dataloader(self):
-#         return self.__dataloader(train=False)
-
-
-
+        return img, label

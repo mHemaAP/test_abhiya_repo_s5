@@ -4,10 +4,10 @@ from model.dogs_classifier import DogsClassifier
 
 def main():
     # Load data module
-    data_module = DogsDataModule(dl_path='data', batch_size=32)  # Fixed dl_path
+    data_module = DogsDataModule(dl_path='./data', batch_size=32)
     
     # Load the best model using the last checkpoint
-    model = DogsClassifier.load_from_checkpoint("checkpoints/dogs_classifier-epoch=XX-val_loss=XX.ckpt")
+    model = DogsClassifier.load_from_checkpoint("checkpoints/dogs_classifier-best_val_loss.ckpt")
     
     # Create trainer
     trainer = pl.Trainer(accelerator='auto')

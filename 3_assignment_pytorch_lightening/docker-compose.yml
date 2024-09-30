@@ -4,7 +4,11 @@ services:
   base:
     build: .
     volumes:
-      - .:/app
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./output:/app/output
+      - ./models:/app/models
+      - ./results:/app/results
     environment:
       - PYTHONPATH=/app
     working_dir: /app

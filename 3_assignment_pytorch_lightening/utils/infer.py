@@ -5,7 +5,7 @@ from model.dogs_classifier import DogsClassifier
 
 def main():
     # Load the best model using the last checkpoint
-    model = DogsClassifier.load_from_checkpoint("checkpoints/dogs_classifier-epoch=XX-val_loss=XX.ckpt")
+    model = DogsClassifier.load_from_checkpoint("checkpoints/dogs_classifier-best_val_loss.ckpt")
     model.eval()
     
     # Prepare image transform
@@ -16,7 +16,7 @@ def main():
     ])
     
     # Load and preprocess the image
-    image_path = "path/to/your/image.jpg"
+    image_path = input("Enter the path to your image: ")
     image = Image.open(image_path).convert('RGB')
     image = transform(image).unsqueeze(0)
     
