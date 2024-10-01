@@ -2,7 +2,9 @@ version: '3'
 
 services:
   base:
-    build: .
+    build: 
+    context: .
+      dockerfile: Dockerfile
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
@@ -14,31 +16,64 @@ services:
     working_dir: /app
 
   train:
-    extends:
-      service: base
-    command: python utils/train.py
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PYTHONPATH=/app
+    working_dir: /app
+    command: ["python", "utils/train.py"]
+    depends_on:
+      - base
 
   eval:
-    extends:
-      service: base
-    command: python utils/eval.py
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # volumes:
+    #   - mnist:/app
+    environment:
+      - PYTHONPATH=/app
+    working_dir: /app
+    command: ["python", "utils/eval.py"]
+    depends_on:
+      - train
 
   infer:
-    extends:
-      service: base
-    command: python utils/infer.py
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # volumes:
+    #   - mnist:/app
+    environment:
+      - PYTHONPATH=/app
+    working_dir: /app
+    command: ["python", "utils/infer.py"]
+    depends_on:
+      - eval
 
   tensorboard:
     image: tensorflow/tensorflow:latest
-    volumes:
-      - ./logs:/logs
+    # volumes:
+    #   - app:/logs
     ports:
       - "6006:6006"
     command: tensorboard --logdir /logs --host 0.0.0.0
 
   jupyter:
-    extends:
-      service: base
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # volumes:
+    #   - mnist:/app
+    environment:
+      - PYTHONPATH=/app
+    working_dir: /app
     ports:
       - "8888:8888"
     command: jupyter notebook --ip 0.0.0.0 --no-browser --allow-root
+    depends_on:
+      - base
+
+# volumes:
+#   mnist:
