@@ -23,7 +23,7 @@ def main():
     # Perform inference
     with torch.no_grad():
         output = model(image)
-        prediction = torch.argmax(output, dim=1)
+        prediction = torch.argmax(output, dim=10)
     
     print(f"Predicted class: {prediction.item()}")
 
