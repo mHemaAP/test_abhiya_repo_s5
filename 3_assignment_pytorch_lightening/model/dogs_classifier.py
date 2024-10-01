@@ -7,7 +7,51 @@ import pytorch_lightning as pl
 from torchmetrics import Accuracy
 from data_module.dogs_datamodule import DogsDataModule
 
-# class DogsClassifier(pl.LightningModule):
+
+class DogsClassifier(pl.LightningModule):
+    def __init__(self, num_classes =10, learning_rate: float = 1e-3):
+        super().__init__()
+        self.save_hyperparameters()
+        self.num_classes = num_classes
+        self.learning_rate = learning_rate
+        
+        self.model = models.resnet50(pretrained=True)
+        self.model.fc = nn.Linear(self.model.fc.in_features, self.num_classes)
+        self.criterion = nn.CrossEntropyLoss()
+
+    def forward(self, x):
+        return self.model(x)
+
+    def training_step(self, batch, batch_idx):
+        x, y = batch
+        logits = self(x)
+        loss = self.criterion(logits, y)
+        self.log('train_loss', loss, prog_bar=True)
+        return loss
+
+    def validation_step(self, batch, batch_idx):
+        x, y = batch
+        logits = self(x)
+        loss = self.criterion(logits, y)
+        preds = torch.argmax(logits, dim=10)
+        acc = (preds == y).float().mean()
+        self.log('val_loss', loss, prog_bar=True)
+        self.log('val_acc', acc, prog_bar=True)
+
+    def test_step(self, batch, batch_idx):
+        x, y = batch
+        logits = self(x)
+        loss = self.criterion(logits, y)
+        preds = torch.argmax(logits, dim=10)
+        acc = (preds == y).float().mean()
+        self.log('test_loss', loss, prog_bar=True)
+        self.log('test_acc', acc, prog_bar=True)
+
+    def configure_optimizers(self):
+        return torch.optim.Adam(self.parameters(), lr=self.hparams.learning_rate)
+
+        
+     # class DogsClassifier(pl.LightningModule):
 #     def __init__(
 #         self,
 #         num_classes: int = None,
@@ -94,52 +138,4 @@ from data_module.dogs_datamodule import DogsDataModule
 #     #         self.train_acc = Accuracy(task="multiclass", num_classes=num_classes)
 #     #         self.val_acc = Accuracy(task="multiclass", num_classes=num_classes)
 #     #         self.test_acc = Accuracy(task="multiclass", num_classes=num_classes)
-
-
-
-
-
-class DogsClassifier(pl.LightningModule):
-    def __init__(self, num_classes:int, learning_rate: float = 1e-3):
-        super().__init__()
-        self.save_hyperparameters()
-        self.num_classes = num_classes
-        self.learning_rate = learning_rate
-        
-        self.model = models.resnet50(pretrained=True)
-        self.model.fc = nn.Linear(self.model.fc.in_features, self.num_classes)
-        self.criterion = nn.CrossEntropyLoss()
-
-    def forward(self, x):
-        return self.model(x)
-
-    def training_step(self, batch, batch_idx):
-        x, y = batch
-        logits = self(x)
-        loss = self.criterion(logits, y)
-        self.log('train_loss', loss, prog_bar=True)
-        return loss
-
-    def validation_step(self, batch, batch_idx):
-        x, y = batch
-        logits = self(x)
-        loss = self.criterion(logits, y)
-        preds = torch.argmax(logits, dim=1)
-        acc = (preds == y).float().mean()
-        self.log('val_loss', loss, prog_bar=True)
-        self.log('val_acc', acc, prog_bar=True)
-
-    def test_step(self, batch, batch_idx):
-        x, y = batch
-        logits = self(x)
-        loss = self.criterion(logits, y)
-        preds = torch.argmax(logits, dim=1)
-        acc = (preds == y).float().mean()
-        self.log('test_loss', loss, prog_bar=True)
-        self.log('test_acc', acc, prog_bar=True)
-
-    def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=self.hparams.learning_rate)
-
-        
-        
+   
