@@ -29,4 +29,4 @@ COPY . .
 EXPOSE 6006
 
 # Set the default command to python
-CMD ["python", "utils/train.py"]
+CMD ["python", "train.py"]

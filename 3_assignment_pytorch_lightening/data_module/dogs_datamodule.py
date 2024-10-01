@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 from PIL import Image
 
 class DogsDataModule(pl.LightningDataModule):
-    def __init__(self, dl_path: str = "data", batch_size: int = 32,num_workers: int = 1):
+    def __init__(self, dl_path: str = "data", batch_size: int = 32,num_workers: int = 0):
         super().__init__()
         self._dl_path = Path(dl_path)
         self._batch_size = batch_size

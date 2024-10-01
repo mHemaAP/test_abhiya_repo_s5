@@ -1,0 +1,7 @@
+num_classes: 10
+learning_rate: 0.001
+pretrained: true
+weight_decay: 1.0e-05
+factor: 0.1
+patience: 10
+min_lr: 1.0e-06

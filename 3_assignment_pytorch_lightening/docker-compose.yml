@@ -3,14 +3,12 @@ version: '3'
 services:
   base:
     build: 
-    context: .
+      context: .
       dockerfile: Dockerfile
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
-      - ./output:/app/output
-      - ./models:/app/models
-      - ./results:/app/results
+      
     environment:
       - PYTHONPATH=/app
     working_dir: /app
@@ -22,7 +20,7 @@ services:
     environment:
       - PYTHONPATH=/app
     working_dir: /app
-    command: ["python", "utils/train.py"]
+    command: ["python", "train.py"]
     depends_on:
       - base
 
@@ -35,7 +33,7 @@ services:
     environment:
       - PYTHONPATH=/app
     working_dir: /app
-    command: ["python", "utils/eval.py"]
+    command: ["python", "eval.py"]
     depends_on:
       - train
 
@@ -48,7 +46,7 @@ services:
     environment:
       - PYTHONPATH=/app
     working_dir: /app
-    command: ["python", "utils/infer.py"]
+    command: ["python", "infer.py"]
     depends_on:
       - eval
 
