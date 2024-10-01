@@ -28,6 +28,8 @@ Note: tried usuing uv, but in gitpod was running out of space. so shidted to pip
 
 ![image](https://github.com/user-attachments/assets/4e0fb84c-f171-4904-b1a2-9b1965e3f37c)
 
+inference:
+![image](https://github.com/user-attachments/assets/111dfbee-c220-4a2e-905f-b492138e6bbd)
 
 
 
