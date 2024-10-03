@@ -10,10 +10,11 @@ from data_module.dogs_datamodule import DogsDataModule
 from model.dogs_classifier import DogsClassifier
 import time
 
+
 def main():
     # Create data module
     data_module = DogsDataModule(dl_path='./data', batch_size=32)
-    
+
     # Explicitly call prepare_data and setup
     data_module.prepare_data()
     data_module.setup()
@@ -21,21 +22,21 @@ def main():
     # Get the number of classes
     num_classes = data_module.get_num_classes()
     print(f"Number of classes in the dataset: {num_classes}")
-    
+
     print("#########################")
-    
+
     # Create model
-    model = DogsClassifier(num_classes=num_classes, learning_rate=1e-3)
-    
+    model = DogsClassifier(num_classes=num_classes, lr=1e-3)
+
     # Setup logging
     logger = TensorBoardLogger("logs", name="dogs_classifier")
 
     # Ensure directory exists
-    checkpoint_dir = '/app/checkpoints/'
+    checkpoint_dir = './checkpoints/'
     if not os.path.exists(checkpoint_dir):
        os.makedirs(checkpoint_dir)
-    
-    
+
+
 
     # Setup checkpointing
     checkpoint_callback = ModelCheckpoint(
@@ -45,7 +46,7 @@ def main():
         save_top_k=1,               # Save only the best model
         mode='min',                 # 'min' because we want the minimum validation loss
     )
-    
+
     # Create trainer
     trainer = pl.Trainer(
         max_epochs=1,
@@ -53,7 +54,7 @@ def main():
         callbacks=[checkpoint_callback, RichProgressBar()],
         accelerator='auto',
     )
-    
+
     print("trainer created")
 
     # Train the model
