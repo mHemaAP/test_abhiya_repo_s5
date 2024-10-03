@@ -65,6 +65,16 @@ class DogsDataModule(pl.LightningDataModule):
             dst_path = input_folder.joinpath(row['image_path'].split('/')[-1])
             shutil.copy(src_path, dst_path)
 
+
+            #ADDITION TO AVOID DUPLICATION 
+
+              # Check if the destination file already exists
+            if not dst_path.exists():
+                shutil.copy(src_path, dst_path)
+                print(f"Copied: {dst_path}")
+            else:
+                print(f"Already exists: {dst_path}")
+
         print(f"Validation images saved to: {input_folder.absolute()}") 
 
 

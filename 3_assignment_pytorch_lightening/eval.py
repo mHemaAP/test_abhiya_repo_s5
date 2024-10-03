@@ -6,7 +6,9 @@ import torch
 
 def evaluate():
     data_module = DogsDataModule('./data')  # Ensure data path is correct
-    model = DogsClassifier.load_from_checkpoint('checkpoints/dogs_classifier-best_val_loss.ckpt', strict=False)
+    checkpoint_path = '/app/checkpoints/dogs_classifier-best_val_loss.ckpt'
+    model = DogsClassifier.load_from_checkpoint(checkpoint_path, strict=False)
+   
 
     # Use accelerator='gpu' or accelerator='auto' instead of gpus
     trainer = pl.Trainer(accelerator='auto')

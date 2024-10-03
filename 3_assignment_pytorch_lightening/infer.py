@@ -63,7 +63,8 @@ def main():
     output_folder.mkdir(exist_ok=True)
 
     # Load the model
-    model = DogsClassifier.load_from_checkpoint('checkpoints/dogs_classifier-best_val_loss.ckpt', strict=False)
+    checkpoint_path = '/app/checkpoints/dogs_classifier-best_val_loss.ckpt'
+    model = DogsClassifier.load_from_checkpoint(checkpoint_path, strict=False)
     model.eval()
 
     # Get all image files from the input folder

@@ -1,0 +1,12 @@
+# Ignore checkpoint files and folder
+checkpoints/
+
+
+ 
+*.cktp 
+checkpoints/dogs_classifier-best_val_loss-v1.ckpt
+.gitignore
+checkpoints/dogs_classifier-best_val_loss-v2.ckpt
+.gitignore
+checkpoints/dogs_classifier-best_val_loss-v3.ckpt
+.gitignore

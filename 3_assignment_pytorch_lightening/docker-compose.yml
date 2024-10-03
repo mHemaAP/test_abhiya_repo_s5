@@ -1,4 +1,3 @@
-version: '3'
 
 services:
   base:
@@ -8,6 +7,9 @@ services:
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
+      - ./checkpoints:/app/checkpoints
+      - ./input:/app/input
+      - ./output:/app/output
       
     environment:
       - PYTHONPATH=/app
@@ -28,8 +30,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    # volumes:
-    #   - mnist:/app
+    volumes:
+      - ./checkpoints:/app/checkpoints
     environment:
       - PYTHONPATH=/app
     working_dir: /app
@@ -41,8 +43,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    # volumes:
-    #   - mnist:/app
+    volumes:
+      - ./checkpoints:/app/checkpoints
+      - ./input:/app/input
+      - ./output:/app/output
     environment:
       - PYTHONPATH=/app
     working_dir: /app
@@ -52,26 +56,26 @@ services:
 
   tensorboard:
     image: tensorflow/tensorflow:latest
-    # volumes:
-    #   - app:/logs
+    volumes:
+      - ./logs:/logs
     ports:
       - "6006:6006"
     command: tensorboard --logdir /logs --host 0.0.0.0
 
-  jupyter:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    # volumes:
-    #   - mnist:/app
-    environment:
-      - PYTHONPATH=/app
-    working_dir: /app
-    ports:
-      - "8888:8888"
-    command: jupyter notebook --ip 0.0.0.0 --no-browser --allow-root
-    depends_on:
-      - base
+#   jupyter:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     # volumes:
+#     #   - mnist:/app
+#     environment:
+#       - PYTHONPATH=/app
+#     working_dir: /app
+#     ports:
+#       - "8888:8888"
+#     command: jupyter notebook --ip 0.0.0.0 --no-browser --allow-root
+#     depends_on:
+#       - base
 
-# volumes:
-#   mnist:
+# # volumes:
+# #   mnist:
