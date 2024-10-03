@@ -11,6 +11,7 @@ from torchvision.datasets.utils import download_and_extract_archive
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from PIL import Image
+import shutil 
 
 class DogsDataModule(pl.LightningDataModule):
     def __init__(self, dl_path: str = "data", batch_size: int = 32,num_workers: int = 0):
@@ -27,7 +28,7 @@ class DogsDataModule(pl.LightningDataModule):
         """Download images and prepare datasets."""
         dataset_dir = self._dl_path.joinpath("dataset")
         print(f"Checking for dataset in: {dataset_dir}")
-        
+
         # Check if the dataset already exists
         if not dataset_dir.exists():
             download_and_extract_archive(
@@ -44,18 +45,35 @@ class DogsDataModule(pl.LightningDataModule):
 
         self.num_classes = dataset_df['label'].nunique()
         print(f"Number of unique classes: {self.num_classes}")
-        
+
         train_df, temp_df = self.split_train_temp(dataset_df)
         val_df, test_df = self.split_val_test(temp_df)
 
         print(f"Train set size: {len(train_df)}")
         print(f"Validation set size: {len(val_df)}")
         print(f"Test set size: {len(test_df)}")
+
+
+
+        # create input folder for inference:
+        input_folder = Path("input")
+        if not input_folder.exists():
+            input_folder.mkdir(parents=True)
         
+        for _, row in val_df.iterrows():
+            src_path = self._dl_path.joinpath("dataset", row['image_path'])
+            dst_path = input_folder.joinpath(row['image_path'].split('/')[-1])
+            shutil.copy(src_path, dst_path)
+
+        print(f"Validation images saved to: {input_folder.absolute()}") 
+
+
 
         self.train_dataset = self.create_dataset(train_df)
         self.val_dataset = self.create_dataset(val_df)
         self.test_dataset = self.create_dataset(test_df)
+
+        print(f"Length of validation dataset: {len(self.val_dataset)}")
 
     def create_dataframe(self):
         DATASET_PATH = self._dl_path.joinpath("dataset")
@@ -64,10 +82,14 @@ class DogsDataModule(pl.LightningDataModule):
         print(f"Number of images found: {len(IMAGE_PATH_LIST)}")
         images_path = [str(img_path.relative_to(DATASET_PATH)) for img_path in IMAGE_PATH_LIST]
         labels = [img_path.parent.name for img_path in IMAGE_PATH_LIST]
-        
+
         df = pd.DataFrame({'image_path': images_path, 'label': labels})
         print(f"Number of unique labels: {df['label'].nunique()}")
+        print(df.head())
         return df
+
+
+
 
     def get_num_classes(self):
         if self.num_classes is None:
@@ -77,20 +99,20 @@ class DogsDataModule(pl.LightningDataModule):
     def split_train_temp(self, df):
         train_split_idx, temp_split_idx, _, _ = (
             train_test_split(
-                df.index, 
-                df.label, 
+                df.index,
+                df.label,
                 test_size=0.30,
                 stratify=df.label,
                 random_state=42
             )
-        ) 
+        )
         return df.iloc[train_split_idx].reset_index(drop=True), df.iloc[temp_split_idx].reset_index(drop=True)
 
     def split_val_test(self, df):
         val_split_idx, test_split_idx, _, _ = (
             train_test_split(
-                df.index, 
-                df.label, 
+                df.index,
+                df.label,
                 test_size=0.5,
                 stratify=df.label,
                 random_state=42
@@ -120,7 +142,7 @@ class DogsDataModule(pl.LightningDataModule):
         return DataLoader(self.test_dataset, batch_size=self._batch_size, num_workers=self._num_workers, shuffle=False)
 
 
-class CustomImageDataset(Dataset):  # Change this line
+class CustomImageDataset(Dataset):  
     def __init__(self, root, image_paths, transform=None):
         self.root = root
         self.image_paths = image_paths
