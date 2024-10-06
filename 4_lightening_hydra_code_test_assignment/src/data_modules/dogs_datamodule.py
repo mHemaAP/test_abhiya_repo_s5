@@ -20,7 +20,8 @@ class DogsBreadDataModule(pl.LightningDataModule):
                 batch_size:int,
                 num_workers:int,
                 pin_memory:bool,
-                data_dir:Optional[AnyStr]=None,
+                data_dir: Optional[str] = "data",  # Default data directory
+                # data_dir:Optional[AnyStr]=None,
 
     ) -> None:
         super().__init__()
