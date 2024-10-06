@@ -2,4 +2,4 @@ _target_: src.datamodules.dogs_datamodule.DogsBreadDataModule
 data_dir: ${paths.data_dir}/dogs_dataset
 batch_size: 32
 num_workers: 0 
-pin_memory: false
+pin_memory: False
