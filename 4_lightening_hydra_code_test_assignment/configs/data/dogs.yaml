@@ -1,5 +1,5 @@
-_target_: src.datamodules.dogs_datamodule.DogsBreedDataModule
+_target_: src.data_modules.dogs_datamodule.DogsBreedDataModule
 data_dir: ${paths.data_dir}/dogs_dataset
 batch_size: 32
-num_workers: 0 
+num_workers: 0 src
 pin_memory: False

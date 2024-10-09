@@ -1,0 +1,9 @@
+defaults:
+  - _self_
+  - data: dogs
+  - model: mdogs
+  - paths: default
+
+ckpt_path: null  # Path to the checkpoint file for inference
+input_path: null  # Path to input data for inference
+output_path: null  # Path to save inference results

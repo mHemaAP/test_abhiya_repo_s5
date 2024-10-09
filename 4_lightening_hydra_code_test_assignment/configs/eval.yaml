@@ -1,0 +1,11 @@
+defaults:
+  - _self_
+  - data: dogs
+  - model: mdogs
+  - paths: default
+  - trainer: default
+  - callbacks: default
+  - logger: default
+
+ckpt_path: null  # Path to the checkpoint file for evaluation
+split: "test"  # Which data split to evaluate on

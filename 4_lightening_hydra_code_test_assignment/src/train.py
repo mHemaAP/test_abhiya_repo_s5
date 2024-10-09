@@ -4,7 +4,7 @@ import logging
 
 import hydra
 from omegaconf import DictConfig,OmegaConf
-import lightning as L
+import lightning as Ldata
 from lightning.pytorch.loggers import Logger
 from typing import List
 

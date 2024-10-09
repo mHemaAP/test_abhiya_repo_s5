@@ -19,30 +19,10 @@ from src.utils.logging_utils import setup_logger, task_wrapper
 log = logging.getLogger(__name__)
 
 def instantiate_callbacks(callback_cfg: DictConfig) -> List[L.Callback]:
-    callbacks: List[L.Callback] = []
-    if not callback_cfg:
-        log.warning("No callback configs found! Skipping..")
-        return callbacks
-
-    for _, cb_conf in callback_cfg.items():
-        if "_target_" in cb_conf:
-            log.info(f"Instantiating callback <{cb_conf._target_}>")
-            callbacks.append(hydra.utils.instantiate(cb_conf))
-
-    return callbacks
+    # ... (existing code)
 
 def instantiate_loggers(logger_cfg: DictConfig) -> List[Logger]:
-    loggers: List[Logger] = []
-    if not logger_cfg:
-        log.warning("No logger configs found! Skipping..")
-        return loggers
-
-    for _, lg_conf in logger_cfg.items():
-        if "_target_" in lg_conf:
-            log.info(f"Instantiating logger <{lg_conf._target_}>")
-            loggers.append(hydra.utils.instantiate(lg_conf))
-
-    return loggers
+    # ... (existing code)
 
 @task_wrapper
 def evaluate(
