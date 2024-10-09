@@ -6,7 +6,7 @@ import rootutils
 root = rootutils.setup_root(__file__, indicator=".project-root", pythonpath=True)
 
 
-from src.datamodules.dogs_datamodule import DogsBreadDataModule
+from src.data_modules.dogs_datamodule import DogsBreedDataModule
 
 
 
@@ -16,7 +16,7 @@ import os
 def datamodule():
     print(os.getcwd())
     
-    dm = DogsBreadDataModule(batch_size=8,
+    dm = DogsBreedDataModule(batch_size=8,
                 num_workers=0,
                 pin_memory=False,
                 data_dir="./data/dogs_dataset")
@@ -25,7 +25,7 @@ def datamodule():
 
 
 
-def test_dogsbread_data_setup(datamodule):
+def test_dogsbreed_data_setup(datamodule):
     datamodule.prepare_data()
     datamodule.setup()
 
@@ -43,7 +43,7 @@ def test_prepare_data(datamodule):
     assert len(datamodule.train_dataset) > len(datamodule.validation_dataset)
 
 
-def test_dogsbread_dataloaders(datamodule):
+def test_dogsbreed_dataloaders(datamodule):
     datamodule.prepare_data()
     datamodule.setup()
 

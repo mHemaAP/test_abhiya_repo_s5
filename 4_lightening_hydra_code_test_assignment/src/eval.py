@@ -52,13 +52,20 @@ def evaluate(
     datamodule: L.LightningDataModule,
 ):
     log.info("Starting evaluation!")
+    # Ensure the datamodule is set up
+    datamodule.setup(stage="test")
+
+    # Get the test dataloader
+    test_loader = datamodule.test_dataloader()
+
     if cfg.get("ckpt_path"):
         log.info(f"Loading checkpoint: {cfg.ckpt_path}")
-        test_metrics = trainer.test(model, datamodule, ckpt_path=cfg.ckpt_path)
+        test_metrics = trainer.test(model, dataloaders=test_loader, ckpt_path=cfg.ckpt_path)
     else:
         log.warning("No checkpoint path provided. Using current model weights.")
-        test_metrics = trainer.test(model, datamodule)
+        test_metrics = trainer.test(model, dataloaders=test_loader)
     log.info(f"Test metrics:\n{test_metrics}")
+  
 
 @hydra.main(version_base="1.3", config_path="../configs", config_name="eval")
 def main(cfg: DictConfig):
