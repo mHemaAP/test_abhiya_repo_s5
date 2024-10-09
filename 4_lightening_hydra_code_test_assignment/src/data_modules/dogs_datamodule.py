@@ -85,9 +85,17 @@ class DogsBreedDataModule(pl.LightningDataModule):
       if len(data_images) == 0 or self.num_classes == 0:
         raise RuntimeError("No images found or no unique classes. Check the dataset structure and content.")      
 
-      train_df, test_df = self.split_train_test(data_images)
+      train_val_df, test_df = self.split_train_test(data_images)
+
+      # Further split train+val into train and val with 90:10 ratio
+      train_df, val_df = train_test_split(train_val_df, test_size=0.1, stratify=train_val_df['label'], random_state=42)      
+
+      train_df = train_df.reset_index(drop=True)
+      val_df = val_df.reset_index(drop=True)
+      test_df = test_df.reset_index(drop=True)
 
       print(f"Train set size: {len(train_df)}")
+      print(f"Validation set size: {len(val_df)}")      
       print(f"Test set size: {len(test_df)}")
 
       self.train_dataset = self.create_dataset(train_df)
@@ -98,7 +106,18 @@ class DogsBreedDataModule(pl.LightningDataModule):
       if not val_dir.exists():
           val_dir.mkdir(parents=True, exist_ok=True)
           self.prepare_validation_data(train_df)
-    
+
+      # Copy validation images to validation folder
+      for _, row in val_df.iterrows():
+        src_path = self._dl_path.joinpath("dataset", row['image_path'])
+        dst_path = val_dir.joinpath(src_path.name)
+        if not dst_path.exists():
+            shutil.copy(src_path, dst_path)
+            print(f"Copied validation image: {dst_path}")
+        else:
+            print(f"Validation image already exists: {dst_path}")
+
+
       val_transform = transforms.Compose([
             transforms.Resize((224, 224)),
             transforms.ToTensor(),
@@ -107,6 +126,7 @@ class DogsBreedDataModule(pl.LightningDataModule):
       
       self.val_dataset = ImageFolder(root=str(val_dir), transform=val_transform)
       print(f"Number of validation images: {len(self.val_dataset)}")
+      print(f"Validation images saved to: {val_dir}")
 
 
     #   # Print validation images number 
