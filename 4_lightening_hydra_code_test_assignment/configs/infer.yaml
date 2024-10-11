@@ -4,6 +4,6 @@ defaults:
   - model: mdogs
   - paths: default
 
-ckpt_path: null  # Path to the checkpoint file for inference
-input_path: null  # Path to input data for inference
-output_path: null  # Path to save inference results
+ckpt_path: ${paths.output_dir}/checkpoints/*.ckpt # null  # Path to the checkpoint file for inference
+input_path: ${paths.data_dir}/validation/ # null  # Path to input data for inference
+output_path: ${hydra:runtime.cwd}/validation_results/ # ${paths.output_dir}/validation_results/ # null  # Path to save inference results

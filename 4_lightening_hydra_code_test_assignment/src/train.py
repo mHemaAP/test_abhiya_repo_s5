@@ -26,7 +26,8 @@ def instantiate_callbacks(callback_cfg: DictConfig) -> List[L.Callback]:
         return callbacks
 
     for _, cb_conf in callback_cfg.items():
-        if "_target_" in cb_conf:
+        #if "_target_" in cb_conf:
+        if isinstance(cb_conf, DictConfig) and "_target_" in cb_conf:
             log.info(f"Instantiating callback <{cb_conf._target_}>")
             callbacks.append(hydra.utils.instantiate(cb_conf))
 

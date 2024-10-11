@@ -1,0 +1,121 @@
+    1  cd 4_lightening_hydra_code_test_assignment/
+    2  docker build -t hydra_test1 .
+    3  docker run src/train.py
+    4  docker images ls
+    5  docker ps -a
+    6  docker run hydra_test1
+    7  docker ps -a
+    8  docker run -t -i --rm hydra_test1 bash
+    9  cd 4_lightening_hydra_code_test_assignment/
+   10  curl -LsSf https://astral.sh/uv/install.sh | sh
+   11  uv init .
+   12  docker build -t my_training_image .
+   13  docker run -p 6006:6006 my_training_image
+   14  docker run -it --name my_training_container my_training_image /bin/bash
+   15  docker build -t my_training_image .
+   16  docker run -it --name my_training_container my_training_image /bin/bash
+   17  docker stop my_training_container
+   18  docker rm my_training_container
+   19  docker ps -a
+   20  docker container rm 3cdbca712fc5
+   21  docker container rm 1f0bf33efc2d
+   22  dockr container rm 008f8a306942
+   23  docker container rm 008f8a306942
+   24  docker ps -a
+   25  docker build -t my_training_image .
+   26  docker run -it --name my_training_container my_training_image /bin/bash
+   27  docker stop my_training_container
+   28  docker srm my_training_container
+   29  docker srm my_taining_container
+   30  docker rm my_taining_container
+   31  docker ps -a
+   32  docker container rm 5443459b3c48
+   33  docker build -t my_training_image .
+   34  docker run -it --name my_training_container my_training_image /bin/bash
+   35  docker ps -a
+   36  docker stop my_training_container
+   37  docker container rm b9096fee91bd
+   38  docker build -t my_training_image .
+   39  docker run -it --name my_training_container my_training_image /bin/bash
+   40  docker stop my_training_container
+   41  docker ps -a
+   42  docker conatiner rm 0854ed9996f1
+   43  docker container rm 0854ed9996f1
+   44  docker build -t my_training_image .
+   45  docker run -it --name my_training_container my_training_image /bin/bash
+   46  docker stop my_training_container
+   47  docker ps -a
+   48  docker container rm 77cf5132e0ce
+   49  docker build -t my_training_image .
+   50  docker run -it --name my_training_container my_training_image /bin/bash
+   51  docker stop my_training_container
+   52  docker ps -a
+   53  docker container rm 23c85910370e
+   54  docker build -t my_training_image .
+   55  docker run -it --name my_training_container my_training_image /bin/bash
+   56  docker stop my_training_container
+   57  docker ps -a
+   58  docker container rm f23dec856bf3
+   59  docker build -t my_training_image .
+   60  docker run -it --name my_training_container my_training_image /bin/bash
+   61  docker stop my_training_container
+   62  docker ps -a
+   63  docker container rm 1e76e23505fb
+   64  docker build -t my_training_image .
+   65  docker run -it --name my_training_container my_training_image /bin/bash
+   66  docker stop my_training_container
+   67  docker ps -a
+   68  docker container rm b833b47baa71
+   69  docker build -t my_training_image .
+   70  docker run -it --name my_training_container my_training_image /bin/bash
+   71  docker stop my_training_container
+   72  docker ps -a
+   73  docker container rm 39ef81d9b754
+   74  docker build -t my_training_image .
+   75  docker run -it --name my_training_container my_training_image /bin/bash
+   76  history > history123456.txt
+   77  docker stop my_training_container
+   78  docker ps -a
+   79  docker container rm 85ca98cf7db2
+   80  cd 4_lightening_hydra_code_test_assignment/
+   81  docker build -t my_training_image .
+   82  docker run -it --name my_training_container my_training_image /bin/bash
+   83  cd 4_lightening_hydra_code_test_assignment/
+   84  docker ps -a
+   85  docker container stop d3381e45c1db
+   86  docker conatiner rm d3381e45c1db
+   87  docker container rm d3381e45c1db
+   88  docker ps -a
+   89  docker build -t my_training_image .
+   90  docker run -it --name my_training_container my_training_image /bin/bash
+   91  docker ps -a
+   92  docker run -it --name my_training_container my_training_image /bin/bash
+   93  docker container stop add8a88fbbd1
+   94  docker container rm add8a88fbbd1
+   95  docker build -t my_training_image .
+   96  docker run -it --name my_training_container my_training_image /bin/bash
+   97  docker ps -a
+   98  docker container stop dc1eb122a819
+   99  docker container rm dc1eb122a819
+  100  docker build -t my_training_image .
+  101  docker run -it --name my_training_container my_training_image /bin/bash
+  102  docker ps -a
+  103  docker container stop c3141e92eac6
+  104  docker container rm c3141e92eac6
+  105  docker build -t my_training_image .
+  106  docker run -it --name my_training_container my_training_image /bin/bash
+  107  git config user.name "abhiyagupta" 
+  108  git config user.email "abhiya.gupta@gmail.com" 
+  109  git status
+  110  cd ..
+  111  git status
+  112  cd 4_lightening_hydra_code_test_assignment/
+  113  git status
+  114  git add .
+  115  git commit -m "workimg code till inference"
+  116  git remote -v
+  117  git remote add origin https://github.com/mHemaAP/test_abhiya_repo_s5.git
+  118  git remote remove  origin 
+  119  git remote add origin https://github.com/mHemaAP/test_abhiya_repo_s5.git
+  120  git push -u origin master
+  121  history > history_notes.txt

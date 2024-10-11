@@ -85,9 +85,22 @@ class DogsBreedDataModule(pl.LightningDataModule):
       if len(data_images) == 0 or self.num_classes == 0:
         raise RuntimeError("No images found or no unique classes. Check the dataset structure and content.")      
 
-      train_df, test_df = self.split_train_test(data_images)
+# <<<<<<< HEAD
+#       train_df, test_df = self.split_train_test(data_images)
+
+# =======
+      train_val_df, test_df = self.split_train_test(data_images)
+
+      # Further split train+val into train and val with 90:10 ratio
+      train_df, val_df = train_test_split(train_val_df, test_size=0.1, stratify=train_val_df['label'], random_state=42)      
+
+      train_df = train_df.reset_index(drop=True)
+      val_df = val_df.reset_index(drop=True)
+      test_df = test_df.reset_index(drop=True)
+# >>>>>>> hema/master
 
       print(f"Train set size: {len(train_df)}")
+      print(f"Validation set size: {len(val_df)}")      
       print(f"Test set size: {len(test_df)}")
 
       self.train_dataset = self.create_dataset(train_df)
@@ -108,6 +121,7 @@ class DogsBreedDataModule(pl.LightningDataModule):
       self.val_dataset = ImageFolder(root=str(val_dir), transform=val_transform)
       print(f"Number of validation images: {len(self.val_dataset)}")
 
+# <<<<<<< HEAD
 
     #   # Print validation images number 
     #   num_val_images = len(list(val_dir.glob("*/*.jpg")))
@@ -118,6 +132,39 @@ class DogsBreedDataModule(pl.LightningDataModule):
     #   if not input_folder.exists():
     #       input_folder.mkdir(parents=True, exist_ok=True)
 
+# =======
+      # Copy validation images to validation folder
+      for _, row in val_df.iterrows():
+        src_path = self._dl_path.joinpath("dataset", row['image_path'])
+        dst_path = val_dir.joinpath(src_path.name)
+        if not dst_path.exists():
+            shutil.copy(src_path, dst_path)
+            print(f"Copied validation image: {dst_path}")
+        else:
+            print(f"Validation image already exists: {dst_path}")
+
+
+      val_transform = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        ])
+      
+      self.val_dataset = ImageFolder(root=str(val_dir), transform=val_transform)
+      print(f"Number of validation images: {len(self.val_dataset)}")
+      print(f"Validation images saved to: {val_dir}")
+
+
+    #   # Print validation images number 
+    #   num_val_images = len(list(val_dir.glob("*/*.jpg")))
+    #   print(f"Number of validation images: {num_val_images} (not included in the train-test split)")
+
+    #   # Move validation images to the input folder
+    #   input_folder = Path("input")
+    #   if not input_folder.exists():
+    #       input_folder.mkdir(parents=True, exist_ok=True)
+
+# >>>>>>> hema/master
     #   for img_path in val_dir.glob("*/*.jpg"):
     #       dst_path = input_folder.joinpath(img_path.name)
     #       shutil.copy(img_path, dst_path)
