@@ -44,6 +44,29 @@ def instantiate_loggers(logger_cfg: DictConfig) -> List[Logger]:
 
     return loggers
 
+import os
+import glob
+
+def get_latest_checkpoint(base_dir):
+    base_dir = Path(base_dir)
+    print(f"Looking for checkpoints starting from directory: {base_dir}")
+
+    # Start from the base_dir and search upwards until we find a checkpoint
+    current_dir = base_dir
+    while current_dir != current_dir.parent:  # Stop when we reach the root directory
+        checkpoint_pattern = str(current_dir / "**" / "checkpoints" / "*.ckpt")
+        print(f"Searching with pattern: {checkpoint_pattern}")
+        
+        checkpoint_files = glob.glob(checkpoint_pattern, recursive=True)
+        if checkpoint_files:
+            print(f"Checkpoint files found: {checkpoint_files}")
+            return max(checkpoint_files, key=os.path.getctime)
+        
+        current_dir = current_dir.parent
+
+    raise FileNotFoundError(f"No checkpoints found in or above {base_dir}")
+
+
 @task_wrapper
 def evaluate(
     cfg: DictConfig,
@@ -58,9 +81,13 @@ def evaluate(
     # Get the test dataloader
     test_loader = datamodule.test_dataloader()
 
-    if cfg.get("ckpt_path"):
-        log.info(f"Loading checkpoint: {cfg.ckpt_path}")
-        test_metrics = trainer.test(model, dataloaders=test_loader, ckpt_path=cfg.ckpt_path)
+    base_dir = cfg.paths.output_dir
+    ckpt_path = get_latest_checkpoint(base_dir)
+    log.info(f"Using checkpoint: {ckpt_path}")    
+
+    if (ckpt_path):
+        log.info(f"Loading checkpoint: {ckpt_path}")
+        test_metrics = trainer.test(model, dataloaders=test_loader, ckpt_path=ckpt_path)
     else:
         log.warning("No checkpoint path provided. Using current model weights.")
         test_metrics = trainer.test(model, dataloaders=test_loader)

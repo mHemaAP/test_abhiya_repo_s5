@@ -7,5 +7,9 @@ defaults:
   - callbacks: default
   - logger: default
 
-ckpt_path: null  # Path to the checkpoint file for evaluation
+#ckpt_path: null  # Path to the checkpoint file for evaluation
+paths:
+  output_dir: ${hydra:runtime.cwd}/outputs
+
+ckpt_path: ${paths.output_dir}
 split: "test"  # Which data split to evaluate on
