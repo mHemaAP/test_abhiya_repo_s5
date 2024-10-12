@@ -25,8 +25,6 @@ class DogsBreedDataModule(pl.LightningDataModule):
                 pin_memory:bool,
                 seed: Optional[int] = 42,
                 data_dir: Optional[str] = "dogs_dataset",  # Default data directory
-                # data_dir:Optional[AnyStr]=None,
-
     ) -> None:
         super().__init__()
         self.save_hyperparameters()
@@ -41,7 +39,6 @@ class DogsBreedDataModule(pl.LightningDataModule):
         self.train_dataset = None
         self.val_dataset = None
         self.test_dataset = None        
-        #self.prepare_data()s
 
     def prepare_data(self):
         """Download images and prepare datasets."""
@@ -63,9 +60,7 @@ class DogsBreedDataModule(pl.LightningDataModule):
         # Check if the dataset has the expected structure
         if not any(dataset_dir.glob("*/*.jpg")):
             raise RuntimeError(f"No images found in {dataset_dir}. The dataset may be corrupted or have an unexpected structure.")
-    
-
-
+  
     def setup(self, stage: Optional[str] = None):
 
       """Load data and split into train, val, test sets."""
@@ -82,13 +77,9 @@ class DogsBreedDataModule(pl.LightningDataModule):
       self.num_classes = data_images['label'].nunique()
       print(f"Number of unique classes: {self.num_classes}")
 
-      if len(data_images) == 0 or self.num_classes == 0: 
+      if len(data_images) == 0 or self.num_classes == 0:
         raise RuntimeError("No images found or no unique classes. Check the dataset structure and content.")      
 
-# <<<<<<< HEAD
-#       train_df, test_df = self.split_train_test(data_images)
-
-# =======
       train_val_df, test_df = self.split_train_test(data_images)
 
       # Further split train+val into train and val with 90:10 ratio
@@ -97,7 +88,6 @@ class DogsBreedDataModule(pl.LightningDataModule):
       train_df = train_df.reset_index(drop=True)
       val_df = val_df.reset_index(drop=True)
       test_df = test_df.reset_index(drop=True)
-# >>>>>>> hema/master
 
       print(f"Train set size: {len(train_df)}")
       print(f"Validation set size: {len(val_df)}")      
@@ -111,38 +101,16 @@ class DogsBreedDataModule(pl.LightningDataModule):
       if not val_dir.exists():
           val_dir.mkdir(parents=True, exist_ok=True)
           self.prepare_validation_data(train_df)
-    
-      val_transform = transforms.Compose([
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        ])
-      
-      self.val_dataset = ImageFolder(root=str(val_dir), transform=val_transform)
-      print(f"Number of validation images: {len(self.val_dataset)}")
 
-# <<<<<<< HEAD
-
-    #   # Print validation images number 
-    #   num_val_images = len(list(val_dir.glob("*/*.jpg")))
-    #   print(f"Number of validation images: {num_val_images} (not included in the train-test split)")
-
-    #   # Move validation images to the input folder
-    #   input_folder = Path("input")
-    #   if not input_folder.exists():
-    #       input_folder.mkdir(parents=True, exist_ok=True)
-
-# =======
       # Copy validation images to validation folder
       for _, row in val_df.iterrows():
         src_path = self._dl_path.joinpath("dataset", row['image_path'])
         dst_path = val_dir.joinpath(src_path.name)
         if not dst_path.exists():
             shutil.copy(src_path, dst_path)
-            #print(f"Copied validation image: {dst_path}")
+            print(f"Copied validation image: {dst_path}")
         else:
             print(f"Validation image already exists: {dst_path}")
-
 
       val_transform = transforms.Compose([
             transforms.Resize((224, 224)),
@@ -153,26 +121,6 @@ class DogsBreedDataModule(pl.LightningDataModule):
       self.val_dataset = ImageFolder(root=str(val_dir), transform=val_transform)
       print(f"Number of validation images: {len(self.val_dataset)}")
       print(f"Validation images saved to: {val_dir}")
-
-
-    #   # Print validation images number 
-    #   num_val_images = len(list(val_dir.glob("*/*.jpg")))
-    #   print(f"Number of validation images: {num_val_images} (not included in the train-test split)")
-
-    #   # Move validation images to the input folder
-    #   input_folder = Path("input")
-    #   if not input_folder.exists():
-    #       input_folder.mkdir(parents=True, exist_ok=True)
-
-# >>>>>>> hema/master
-    #   for img_path in val_dir.glob("*/*.jpg"):
-    #       dst_path = input_folder.joinpath(img_path.name)
-    #       shutil.copy(img_path, dst_path)
-
-    #   print(f"Validation images saved to: {input_folder.absolute()}")
-
-
-            
 
     def create_dataframe(self):
         DATASET_PATH = self._dl_path.joinpath("dataset")
@@ -221,9 +169,6 @@ class DogsBreedDataModule(pl.LightningDataModule):
             transform=transform
         )
 
-    # def train_dataloader(self):
-    #     return DataLoader(self.train_dataset, batch_size=self._batch_size, num_workers=self._num_workers, shuffle=True)
-
     def train_dataloader(self) -> DataLoader:
         self.setup()
         return DataLoader(
@@ -236,12 +181,6 @@ class DogsBreedDataModule(pl.LightningDataModule):
 
     def val_dataloader(self):
         self.setup()
-        # val_transform = transforms.Compose([
-        #     transforms.Resize((224, 224)),
-        #     transforms.ToTensor(),
-        #     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        # ])
-        # val_dataset = ImageFolder(root=str(self._dl_path.joinpath("dataset", "validation")), transform=val_transform)
         return DataLoader(
                     dataset=self.val_dataset, 
                     batch_size=self.hparams.batch_size,
@@ -249,8 +188,6 @@ class DogsBreedDataModule(pl.LightningDataModule):
                     pin_memory=self.hparams.pin_memory,
                     num_workers=self.hparams.num_workers
         )
-
-  
 
     def test_dataloader(self) -> DataLoader:
       self.setup()
@@ -270,10 +207,6 @@ class CustomImageDataset(Dataset):
         self.images = []
         self.labels = []
 
-        # for idx, path in enumerate(image_paths):
-        #     img = Image.open(os.path.join(root, path))
-        #     self.images.append(img)
-        #     self.labels.append(idx)  # Assuming labels are indices
         # Create a mapping of unique labels to integers
         unique_labels = sorted(set(path.split('/')[0] for path in image_paths))
         self.label_to_idx = {label: idx for idx, label in enumerate(unique_labels)}
@@ -298,31 +231,3 @@ class CustomImageDataset(Dataset):
             img = self.transform(img)
 
         return img, label
-
-
-
-
-
-
-# =============================================
-# # output of this cell in colab:
-# Checking for dataset in: dogs_dataset/dataset
-# Checking for dataset in: dogs_dataset/dataset
-# Setting up data...
-# Looking for images in: dogs_dataset/dataset
-# Number of images found (excluding validation): 813
-# Number of unique labels: 10
-# dataframe  is:                                    image_path              label
-# 0   Yorkshire_Terrier/Yorkshire Terrier_8.jpg  Yorkshire_Terrier
-# 1   Yorkshire_Terrier/Yorkshire Terrier_7.jpg  Yorkshire_Terrier
-# 2  Yorkshire_Terrier/Yorkshire Terrier_25.jpg  Yorkshire_Terrier
-# 3   Yorkshire_Terrier/Yorkshire Terrier_9.jpg  Yorkshire_Terrier
-# 4  Yorkshire_Terrier/Yorkshire Terrier_73.jpg  Yorkshire_Terrier
-# shape of dataframe is (813, 2)
-# Total images found for train-test split: 813
-# Number of unique classes: 10
-# Train set size: 650
-# Test set size: 163
-# Number of validation images: 154 (not included in the train-test split)
-# Validation images saved to: /content/input
-
