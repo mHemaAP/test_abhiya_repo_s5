@@ -8,9 +8,6 @@ root = rootutils.setup_root(__file__, indicator=".project-root", pythonpath=True
 
 from src.data_modules.dogs_datamodule import DogsBreedDataModule
 
-
-
-
 import os 
 @pytest.fixture
 def datamodule():

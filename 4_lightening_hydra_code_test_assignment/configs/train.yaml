@@ -15,7 +15,7 @@ defaults:
   # experiment configs allow for version control of specific hyperparameters
   # e.g. best hyperparameters for given model and datamodule
   - experiment: finetune.yaml
-  # I'm not using experimenrs 
+  # I'm not using experiments 
 
   # debugging config (enable through command line, e.g. `python train.py debug=default)
   - debug: null

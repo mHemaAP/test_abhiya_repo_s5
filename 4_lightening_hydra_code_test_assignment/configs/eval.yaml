@@ -7,7 +7,7 @@ defaults:
   - callbacks: default
   - logger: default
 
-#ckpt_path: null  # Path to the checkpoint file for evaluation
+# Path to the checkpoint file for evaluation
 paths:
   output_dir: ${hydra:runtime.cwd}/outputs
 

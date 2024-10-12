@@ -102,8 +102,6 @@ def main(cfg: DictConfig):
     setup_logger(log_dir / "train_log.log")
 
     # Initialize DataModule
-    # log.info(f"Instantiating datamodule <{cfg.data._target_}>")
-    # datamodule: L.LightningDataModule = hydra.utils.instantiate(cfg.data)
     try:
         # Initialize DataModule
         log.info(f"Instantiating datamodule <{cfg.data._target_}>")
