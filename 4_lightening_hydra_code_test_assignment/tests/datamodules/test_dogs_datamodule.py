@@ -32,7 +32,7 @@ def test_dogsbreed_data_setup(datamodule):
     assert datamodule.transforms is not None
     assert datamodule.train_dataset is not None
     assert datamodule.test_dataset is not None
-    assert datamodule.validation_dataset is not None
+    assert datamodule.val_dataset is not None
 
 
 
@@ -40,7 +40,7 @@ def test_prepare_data(datamodule):
     datamodule.prepare_data()
     datamodule.setup()
     assert len(datamodule.train_dataset) > len(datamodule.test_dataset)
-    assert len(datamodule.train_dataset) > len(datamodule.validation_dataset)
+    assert len(datamodule.train_dataset) > len(datamodule.val_dataset)
 
 
 def test_dogsbreed_dataloaders(datamodule):

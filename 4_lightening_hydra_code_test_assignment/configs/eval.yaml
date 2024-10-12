@@ -7,5 +7,7 @@ defaults:
   - callbacks: default
   - logger: default
 
-ckpt_path: null  # Path to the checkpoint file for evaluation
+ckpt_path: ${paths.output_dir}/checkpoints/*.ckpt # null  # Path to the checkpoint file for inference
 split: "test"  # Which data split to evaluate on
+
+# ckpt_path: null  # Path to the checkpoint file for evaluation

@@ -82,7 +82,7 @@ class DogsBreedDataModule(pl.LightningDataModule):
       self.num_classes = data_images['label'].nunique()
       print(f"Number of unique classes: {self.num_classes}")
 
-      if len(data_images) == 0 or self.num_classes == 0:
+      if len(data_images) == 0 or self.num_classes == 0: 
         raise RuntimeError("No images found or no unique classes. Check the dataset structure and content.")      
 
 # <<<<<<< HEAD
@@ -139,7 +139,7 @@ class DogsBreedDataModule(pl.LightningDataModule):
         dst_path = val_dir.joinpath(src_path.name)
         if not dst_path.exists():
             shutil.copy(src_path, dst_path)
-            print(f"Copied validation image: {dst_path}")
+            #print(f"Copied validation image: {dst_path}")
         else:
             print(f"Validation image already exists: {dst_path}")
 
