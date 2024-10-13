@@ -9,14 +9,9 @@ defaults:
   - callbacks: default
   - logger: default # set logger here or use command line (e.g. `python train.py logger=tensorboard`)
   - trainer: default
-  # - paths: default
+  - paths: default
   - hydra: null #default
   
-  - paths:
-      data_dir: ${oc.env:PWD}/data
-      log_dir: ${oc.env:PWD}/logs
-      output_dir: ${oc.env:PWD}/checkpoints
-
   # experiment configs allow for version control of specific hyperparameters
   # e.g. best hyperparameters for given model and datamodule
   - experiment: finetune.yaml
@@ -24,6 +19,11 @@ defaults:
 
   # debugging config (enable through command line, e.g. `python train.py debug=default)
   - debug: null
+
+# paths:
+#   data_dir: ${hydra:runtime.cwd}/data
+#   log_dir: ${hydra:runtime.cwd}/logs
+#   output_dir: ${hydra:runtime.cwd}/checkpoints
 
 # task name, determines output directory path
 task_name: "train"

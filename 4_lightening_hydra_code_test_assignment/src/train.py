@@ -4,7 +4,7 @@ import logging
 import lightning as L
 import hydra
 from omegaconf import DictConfig,OmegaConf
-import lightning as Ldata
+# import lightning as Ldata
 from lightning.pytorch.loggers import Logger
 from typing import List
 
@@ -95,18 +95,18 @@ def main(cfg: DictConfig):
     print(OmegaConf.to_yaml(cfg=cfg))
 
      # Resolve the paths
-    cfg.paths.data_dir = os.path.abspath(cfg.paths.data_dir)
-    cfg.paths.log_dir = os.path.abspath(cfg.paths.log_dir)
-    cfg.paths.output_dir = os.path.abspath(cfg.paths.output_dir)
+    # cfg.paths.data_dir = os.path.abspath(cfg.paths.data_dir)
+    # cfg.paths.log_dir = os.path.abspath(cfg.paths.log_dir)
+    # cfg.paths.output_dir = os.path.abspath(cfg.paths.output_dir)
 
 
 
     ## ADDED changes
 
     # Print resolved paths
-    print(f"Data directory: {cfg.paths.data_dir}")
-    print(f"Log directory: {cfg.paths.log_dir}")
-    print(f"Output directory: {cfg.paths.output_dir}")
+    # print(f"Data directory: {cfg.paths.data_dir}")
+    # print(f"Log directory: {cfg.paths.log_dir}")
+    # print(f"Output directory: {cfg.paths.output_dir}")
 
     # Set up paths
     log_dir = Path(cfg.paths.log_dir)
@@ -116,9 +116,9 @@ def main(cfg: DictConfig):
     setup_logger(log_dir / "train_log.log")
 
     # Log the resolved paths
-    log.info(f"Data directory: {cfg.paths.data_dir}")
-    log.info(f"Log directory: {cfg.paths.log_dir}")
-    log.info(f"Output directory: {cfg.paths.output_dir}")
+    # log.info(f"Data directory: {cfg.paths.data_dir}")
+    # log.info(f"Log directory: {cfg.paths.log_dir}")
+    # log.info(f"Output directory: {cfg.paths.output_dir}")
 
 
 
@@ -164,9 +164,9 @@ def main(cfg: DictConfig):
     if cfg.get("train"):
         train(cfg, trainer, model, datamodule)
 
-    # # Test the model
-    # if cfg.get("test"):
-    #     test(cfg, trainer, model, datamodule)
+    # Test the model
+    if cfg.get("test"):
+        test(cfg, trainer, model, datamodule)
 
 
 if __name__ == "__main__":

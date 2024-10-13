@@ -15,11 +15,13 @@ def datamodule():
 
     # Use absolute path or path relative to project root
     # data_dir = "/code/data/dogs_dataset"
+
+    data_dir="./data/dogs_dataset"
     
     dm = DogsBreedDataModule(batch_size=8,
                 num_workers=0,
                 pin_memory=False,
-                data_dir="./data/dogs_dataset")
+                data_dir= data_dir) #"./data/dogs_dataset")
     print(f"DataModule: {dm}")
     
     print(f"Data directory used: {data_dir}")
