@@ -1,15 +1,17 @@
 import pytest
 import hydra
 from pathlib import Path
+import os
 
 import rootutils
 
 # Setup root directory
 root = rootutils.setup_root(__file__, indicator=".project-root", pythonpath=True)
 
+
+from  src.data_modules.dogs_datamodule import DogsBreedDataModule
 # Import train function
 from src.train import train
-
 
 @pytest.fixture
 def config():
@@ -20,10 +22,8 @@ def config():
         )
         return cfg
 
-
-
-
-def test_catdog_ex_training(config, tmp_path):
+# Rename this function to start with "test_"
+def test_dogs_breed_training(config, tmp_path):
     # Update output and log directories to use temporary path
     config.paths.output_dir = str(tmp_path)
     config.paths.log_dir = str(tmp_path / "logs")
@@ -36,3 +36,24 @@ def test_catdog_ex_training(config, tmp_path):
     # Run training
     train(config, trainer, model, datamodule)
     
+    # Print directory contents for debugging
+    print(f"Contents of {tmp_path}:")
+    for item in os.listdir(tmp_path):
+        print(f"- {item}")
+    
+    # Check if checkpoints directory exists
+    checkpoints_dir = tmp_path / "checkpoints"
+    assert checkpoints_dir.exists(), f"Checkpoints directory should be created at {checkpoints_dir}"
+    
+    # If checkpoints directory exists, check its contents
+    if checkpoints_dir.exists():
+        print(f"Contents of {checkpoints_dir}:")
+        for item in os.listdir(checkpoints_dir):
+            print(f"- {item}")
+    
+    # Add some assertions to verify the training occurred
+    assert any(checkpoints_dir.iterdir()), f"At least one checkpoint should be saved in {checkpoints_dir}"
+
+# Add a simple test to ensure pytest is running
+def test_pytest_is_working():
+    assert True, "This test should always pass"

@@ -9,8 +9,13 @@ defaults:
   - callbacks: default
   - logger: default # set logger here or use command line (e.g. `python train.py logger=tensorboard`)
   - trainer: default
-  - paths: default
+  # - paths: default
   - hydra: null #default
+  
+  - paths:
+      data_dir: ${oc.env:PWD}/data
+      log_dir: ${oc.env:PWD}/logs
+      output_dir: ${oc.env:PWD}/checkpoints
 
   # experiment configs allow for version control of specific hyperparameters
   # e.g. best hyperparameters for given model and datamodule

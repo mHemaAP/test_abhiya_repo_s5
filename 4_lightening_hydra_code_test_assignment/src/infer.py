@@ -80,18 +80,22 @@ def evaluate(trainer, model, datamodule, ckpt_path):
     logging.info(f"Evaluation metrics: {trainer.callback_metrics}")
 
 
+
+
 @task_wrapper
-def save_prediction_image(image, predicted_label, confidence, output_path):
+def save_and_display_prediction_image(image, predicted_label, confidence, output_path):
     plt.figure(figsize=(10, 6))
     plt.imshow(image)
     plt.axis("off")
     plt.title(f"Predicted: {predicted_label} (Confidence: {confidence:.2f})")
     plt.tight_layout()
+    
+    # Save the image to the output path
     plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    
+    # Display the image in the terminal
+    plt.show()  # Add this line to display the image inline
     plt.close()
-
-
-
 
 
 def get_latest_checkpoint(base_dir):
@@ -153,11 +157,10 @@ def main(cfg: DictConfig):
             predicted_label, confidence = infer(model, img_tensor.to(device))
 
             output_file = output_folder / f"{image_file.stem}_prediction.png"
-            save_prediction_image(img, predicted_label, confidence, output_file)
+            save_and_display_prediction_image(img, predicted_label, confidence, output_file)
             print(f"Processed {image_file.name}: {predicted_label} ({confidence:.2f})")
             log.info(f"Processed {image_file.name}: {predicted_label} ({confidence:.2f})")
-            progress.advance(task)
-
+            progress.advance(task) 
     log.info(f"Predictions saved to: {output_folder}")
 
 if __name__ == "__main__":

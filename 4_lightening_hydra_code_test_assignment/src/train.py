@@ -90,20 +90,50 @@ def test(
 @hydra.main(version_base="1.3", config_path="../configs", config_name="train")
 def main(cfg: DictConfig):
 
-    # print(f"Python path: {sys.path}")
+    # print the current working directory and content of config
     print(f"Current working directory: {os.getcwd()}")
-
     print(OmegaConf.to_yaml(cfg=cfg))
+
+     # Resolve the paths
+    cfg.paths.data_dir = os.path.abspath(cfg.paths.data_dir)
+    cfg.paths.log_dir = os.path.abspath(cfg.paths.log_dir)
+    cfg.paths.output_dir = os.path.abspath(cfg.paths.output_dir)
+
+
+
+    ## ADDED changes
+
+    # Print resolved paths
+    print(f"Data directory: {cfg.paths.data_dir}")
+    print(f"Log directory: {cfg.paths.log_dir}")
+    print(f"Output directory: {cfg.paths.output_dir}")
 
     # Set up paths
     log_dir = Path(cfg.paths.log_dir)
+    log_dir.mkdir(parents=True, exist_ok=True)  # Ensure the log directory exists
 
     # Set up logger
     setup_logger(log_dir / "train_log.log")
 
-    # Initialize DataModule
-    # log.info(f"Instantiating datamodule <{cfg.data._target_}>")
-    # datamodule: L.LightningDataModule = hydra.utils.instantiate(cfg.data)
+    # Log the resolved paths
+    log.info(f"Data directory: {cfg.paths.data_dir}")
+    log.info(f"Log directory: {cfg.paths.log_dir}")
+    log.info(f"Output directory: {cfg.paths.output_dir}")
+
+
+
+
+    ## changes over here
+
+
+
+    # # Set up paths
+    # log_dir = Path(cfg.paths.log_dir)
+
+    # # Set up logger
+    # setup_logger(log_dir / "train_log.log")
+
+   
     try:
         # Initialize DataModule
         log.info(f"Instantiating datamodule <{cfg.data._target_}>")
@@ -134,9 +164,9 @@ def main(cfg: DictConfig):
     if cfg.get("train"):
         train(cfg, trainer, model, datamodule)
 
-    # Test the model
-    if cfg.get("test"):
-        test(cfg, trainer, model, datamodule)
+    # # Test the model
+    # if cfg.get("test"):
+    #     test(cfg, trainer, model, datamodule)
 
 
 if __name__ == "__main__":

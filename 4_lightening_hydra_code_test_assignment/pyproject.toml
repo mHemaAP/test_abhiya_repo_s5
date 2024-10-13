@@ -1,7 +1,0 @@
-[project]
-name = "4-lightening-hydra-code-test-assignment"
-version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
-requires-python = ">=3.10"
-dependencies = []
