@@ -1,6 +1,4 @@
 data/
-data_old/
-dogs_dataset/
 *.env
 logs/
 outputs/
