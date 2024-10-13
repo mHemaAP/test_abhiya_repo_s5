@@ -84,7 +84,7 @@ def evaluate(trainer, model, datamodule, ckpt_path):
 
 @task_wrapper
 def save_and_display_prediction_image(image, predicted_label, confidence, output_path):
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(5, 5))
     plt.imshow(image)
     plt.axis("off")
     plt.title(f"Predicted: {predicted_label} (Confidence: {confidence:.2f})")
