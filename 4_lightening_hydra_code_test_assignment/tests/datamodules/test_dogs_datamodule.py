@@ -13,9 +13,6 @@ def datamodule():
     print("Creating datamodule fixture")
     print(f"Current working directory: {os.getcwd()}")
 
-    # Use absolute path or path relative to project root
-    # data_dir = "/code/data/dogs_dataset"
-
     data_dir="./data/dogs_dataset"
     
     dm = DogsBreedDataModule(batch_size=8,
@@ -57,9 +54,3 @@ def test_dogsbreed_dataloaders(datamodule):
     assert val_loader is not None, "Validation dataloader should not be None"
     assert test_loader is not None, "Test dataloader should not be None"
 
-
-
-# #add a simple test that doesn't rely on the datamodule
-# def test_simple():
-#     print("Running test_simple")
-#     assert True

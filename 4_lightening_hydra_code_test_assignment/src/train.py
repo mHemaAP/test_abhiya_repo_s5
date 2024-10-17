@@ -23,9 +23,6 @@ from src.utils.logging_utils import setup_logger, task_wrapper
 #     log_metrics_table,
 # )
 
-
-
-
 log = logging.getLogger(__name__)
 
 
@@ -104,44 +101,12 @@ def main(cfg: DictConfig):
     print(f"Current working directory: {os.getcwd()}")
     print(OmegaConf.to_yaml(cfg=cfg))
 
-     # Resolve the paths
-    # cfg.paths.data_dir = os.path.abspath(cfg.paths.data_dir)
-    # cfg.paths.log_dir = os.path.abspath(cfg.paths.log_dir)
-    # cfg.paths.output_dir = os.path.abspath(cfg.paths.output_dir)
-
-
-
-    ## ADDED changes
-
-    # Print resolved paths
-    # print(f"Data directory: {cfg.paths.data_dir}")
-    # print(f"Log directory: {cfg.paths.log_dir}")
-    # print(f"Output directory: {cfg.paths.output_dir}")
-
     # Set up paths
     log_dir = Path(cfg.paths.log_dir)
     log_dir.mkdir(parents=True, exist_ok=True)  # Ensure the log directory exists
 
     # Set up logger
     setup_logger(log_dir / "train_log.log")
-
-    # Log the resolved paths
-    # log.info(f"Data directory: {cfg.paths.data_dir}")
-    # log.info(f"Log directory: {cfg.paths.log_dir}")
-    # log.info(f"Output directory: {cfg.paths.output_dir}")
-
-
-
-
-    ## changes over here
-
-
-
-    # # Set up paths
-    # log_dir = Path(cfg.paths.log_dir)
-
-    # # Set up logger
-    # setup_logger(log_dir / "train_log.log")
 
    
     try:

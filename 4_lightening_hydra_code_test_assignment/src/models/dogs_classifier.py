@@ -24,9 +24,6 @@ class DogsBreedClassifier(pl.LightningModule):
 
         self.model:timm.models.resnest.ResNet = timm.create_model(model_name=self.hparams.model_name,pretrained=self.hparams.pretrained,num_classes=self.hparams.num_classes,global_pool = 'avg')
 
-        # for p in self.model.parameters():
-        #     p.requires_grad=self.hparams.trainable
-
 
         self.train_acc:Accuracy = Accuracy(task='multiclass',num_classes=self.hparams.num_classes)
         self.test_acc :Accuracy = Accuracy(task='multiclass',num_classes=self.hparams.num_classes)
@@ -74,12 +71,7 @@ class DogsBreedClassifier(pl.LightningModule):
                                     lr=self.hparams.lr,
                                     weight_decay=self.hparams.weight_decay
                     )
-        # scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        #                 optimizer=optimizer,
-        #                 factor=self.hparams.scheduler_factor,
-        #                 patience=self.hparams.scheduler_patience,
-        #                 min_lr=self.hparams.min_lr
-        # )
+
         scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer=optimizer,total_steps=self.trainer.estimated_stepping_batches,max_lr=self.hparams.lr*10)
         return {
             "optimizer":optimizer,
