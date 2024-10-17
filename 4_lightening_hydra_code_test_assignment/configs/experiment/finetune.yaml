@@ -4,7 +4,7 @@ defaults:
   - override /data: dogs
   - override /model: mdogs
   - override /callbacks: default
-  - override /logger: tensorboard
+  - override /logger: default
   - override /trainer: default
 
 seed: 42
@@ -24,7 +24,7 @@ model:
 
 trainer:
   min_epochs: 1
-  max_epochs: 3
+  max_epochs: 1 # 3 
 
 callbacks:
   model_checkpoint:

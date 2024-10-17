@@ -4,7 +4,7 @@ defaults:
   - override /data: dogs
   - override /model: mdogs
   - override /callbacks: default
-  - override /logger: csv
+  - override /logger: dafault 
   - override /trainer: default
 
 seed: 42

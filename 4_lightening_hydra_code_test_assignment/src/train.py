@@ -13,8 +13,18 @@ import rootutils
 # Setup root directory
 root = rootutils.setup_root(__file__, indicator=".project-root", pythonpath=True)
 
-# Imports that require root directory setup
-from src.utils.logging_utils import setup_logger, task_wrapper
+# # Imports that require root directory setup
+# from src.utils.logging_utils import setup_logger, task_wrapper
+# Imports after setting up the root
+from src.utils.logging_utils import (
+    setup_logger,
+    task_wrapper,
+    logger,
+    log_metrics_table,
+)
+
+
+
 
 log = logging.getLogger(__name__)
 
