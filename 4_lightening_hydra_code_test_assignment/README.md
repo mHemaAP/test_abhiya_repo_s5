@@ -1,14 +1,14 @@
-Dog Breed Classification: 
-
+**Dog Breed Classification: 
+**
 This project aims to classify dog breeds using a convolutional neural network (CNN) trained on image data. The project is built using PyTorch Lightning, and Hydra is used for configuration management. The repo also includes test evaluation using a checkpointed model and inference capabilities. Additionally, code coverage (using Codecov) and Docker containerization are integrated.
 
 Key Features
 
-- PyTorch Lightning Framework: Utilizes PyTorch Lightning for efficient model training and management.
-- Hydra: dynamic configuration usuing Hydra.
-- Docker Containerization: Includes Docker setup for easy deployment and reproducibility across different environments.
-- Code Cover & Pytest: Ensure robust code quality by integrating pytest and Codecov for automated testing and achieving 70% or higher test coverage.
-- GHRC integration: deploy and manage Docker image with GitHub Container Registry (GHCR) for seamless integration and versioning. 
+- **PyTorch Lightning Framework**: Utilizes PyTorch Lightning for efficient model training and management.
+- **Hydra**: dynamic configuration usuing Hydra.
+- **Docker Containerization**: Includes Docker setup for easy deployment and reproducibility across different environments.
+- **Code Cover & Pytest**: Ensure robust code quality by integrating pytest and Codecov for automated testing and achieving 70% or higher test coverage.
+- **GHRC integration**: deploy and manage Docker image with GitHub Container Registry (GHCR) for seamless integration and versioning. 
 
 Dataset split into train, test, validation for inference:
 ![image](https://github.com/user-attachments/assets/411ead5e-96f0-40a9-9253-e3acd6a6ad99)
